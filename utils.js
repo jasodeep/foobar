@@ -15,6 +15,9 @@ module.exports.configFilesExists = function () {
         }
     }
     catch (err) {
+        console("**************");
+        console.log('Required files are missing !!');
+        console("**************");
         console.log(err);
     }
 };

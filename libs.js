@@ -113,3 +113,32 @@ module.exports.fileExists = (node, path, callback) => {
               })
       }).catch(e => console.log(e))
 };
+
+module.exports.executeCommand = (node, command, callback) => {
+    console.log("\n\n*****************");
+    console.log('NODE: '+node.ip);
+    console.log('ACTION: Execute Command - '+command);
+    console.log("*****************");
+	var ssh = new SSH({
+	    host: node.ip,
+	    user: node.username,
+	    pass: node.password
+	});
+	ssh.exec(command, {
+	    out: function(stdout) {
+            // console.log(stdout);
+        },
+        err: function(stderr) {
+            console.log(stderr);
+            callback(true, stderr);
+        }
+    }).start();
+
+    ssh.on('error', function(error) {
+        callback(true, error);
+    });
+
+    ssh.on('end', function(response) {
+        callback(false, response);
+    });
+};
